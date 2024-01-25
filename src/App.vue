@@ -1,20 +1,30 @@
 <script>
 import ROSLIB from "roslib";
+import { useRobotStore } from "./stores/store.js";
 
 export default {
+  setup() {
+    const ROBOT_STATE = useRobotStore();
+    return {
+      ROBOT_STATE,
+    };
+  },
   data() {
     return {
       ros: null,
       listener: null,
-      msg: "not yet",
+
+      //data yang di publish
+      toPC: null,
     };
   },
-  // async beforeMount() {
-  //   await this.init();
-  //   this.subscribe();
-  //   console.log("mount ulang");
-  // },
-
+  async beforeMount() {
+    await this.init();
+    this.subscribe();
+  },
+  created() {
+    this.ROBOT_STATE.resetDataRobot();
+  },
   methods: {
     async init() {
       this.ros = new ROSLIB.Ros({
@@ -23,18 +33,22 @@ export default {
 
       this.listener = new ROSLIB.Topic({
         ros: this.ros,
-        name: "/chatter",
-        messageType: "std_msgs/String",
+        name: "/pc2bs",
+        messageType: "beginner_tutorials/PC2BS",
       });
     },
-
     subscribe() {
       let that = this;
       that.listener.subscribe(function (message) {
-        that.msg = message.data;
-        console.log("Received message on " + this.listener + ": " + this.msg);
-        that.count++;
+        that.ROBOT_STATE.dataRobot = message;
+        that.ROBOT_STATE.dataRobot.pos_x += 58;
+        that.ROBOT_STATE.dataRobot.pos_y += 58;
+        that.ROBOT_STATE.dataRobot.bola_x += 58;
+        that.ROBOT_STATE.dataRobot.bola_y += 58;
       });
+    },
+    publish() {
+      this.publisher.publish(this.toPC);
     },
     beforeDestroy() {
       // Berhenti mendengarkan topik sebelum komponen dihancurkan

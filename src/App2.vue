@@ -1,7 +1,11 @@
 <template>
   <v-stage ref="stage" :config="stageSize">
     <v-layer ref="layer">
-      <v-image :config="field_config" />
+      <v-image
+        :config="{
+          image: image,
+        }"
+      />
     </v-layer>
   </v-stage>
 </template>
@@ -17,26 +21,16 @@ export default {
         width: width,
         height: height,
       },
-      field_config: {
-        x: 0,
-        y: 0,
-        image: new Image(),
-        width: null,
-        height: null,
-        rotation: 0,
-        offset: {
-          x: 0,
-          y: 0,
-        },
-      },
+      image: null,
     };
   },
   created() {
-    this.field_config.image.src = "https://konvajs.org/assets/yoda.jpg";
-    // image.onload = () => {
-    //   // set image only when it is loaded
-    //   this.image = image;
-    // };
+    const image = new window.Image();
+    image.src = "https://konvajs.org/assets/yoda.jpg";
+    image.onload = () => {
+      // set image only when it is loaded
+      this.image = image;
+    };
   },
 };
 </script>
