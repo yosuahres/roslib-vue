@@ -111,7 +111,6 @@ export default {
       this.ROBOT_STATE.bs2pc.status = this.tempStatus;
       switch (this.ROBOT_STATE.bs2pc.status) {
         case 1:
-          break;
         case 2:
           this.ROBOT_STATE.bs2pc.tujuan_x = this.ROBOT_STATE.bs2pc.bola_x;
           this.ROBOT_STATE.bs2pc.tujuan_y = this.ROBOT_STATE.bs2pc.bola_y;
