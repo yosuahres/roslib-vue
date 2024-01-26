@@ -125,12 +125,12 @@ export default {
     },
 
     publish() {
-      this.ROBOT_STATE.resetDataRobot();
       this.ROBOT_STATE.bs2pc.status = this.ROBOT_STATE.utils.tempStatus;
       switch (this.ROBOT_STATE.bs2pc.status) {
         case 4:
         case 1:
         case 2:
+          this.ROBOT_STATE.resetDataRobot();
           this.ROBOT_STATE.bs2pc.tujuan_x = 0;
           this.ROBOT_STATE.bs2pc.tujuan_y = 0;
           this.toPC = new ROSLIB.Message({
