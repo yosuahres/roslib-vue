@@ -13,7 +13,7 @@
       <div class="px-5">
         <p>Posisi X : {{ ROBOT_STATE.dataRobot.pos_x - 58 }}</p>
         <p>Posisi Y : {{ ROBOT_STATE.dataRobot.pos_y - 58 }}</p>
-        <p>Posisi Theta : {{ ROBOT_STATE.dataRobot.pos_theta }}</p>
+        <p>Posisi Theta : {{ ROBOT_STATE.dataRobot.pos_theta * -1 }}</p>
       </div>
       <br />
       <p class="text-green-600"><strong>BOLA</strong></p>

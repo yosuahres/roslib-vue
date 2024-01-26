@@ -15,7 +15,6 @@
       </v-layer>
     </v-stage>
   </div>
-  {{ this.RobotConfig }}
 </template>
 
 <script>

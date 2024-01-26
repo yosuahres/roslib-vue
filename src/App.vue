@@ -45,6 +45,7 @@ export default {
         that.ROBOT_STATE.dataRobot.pos_y += 58;
         that.ROBOT_STATE.dataRobot.bola_x += 58;
         that.ROBOT_STATE.dataRobot.bola_y += 58;
+        that.ROBOT_STATE.dataRobot.pos_theta *= -1;
         console.log(that.ROBOT_STATE.dataRobot);
       });
     },
