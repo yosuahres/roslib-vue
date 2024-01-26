@@ -102,7 +102,7 @@ export default {
       this.publisher = new ROSLIB.Topic({
         ros: this.ros,
         name: "/bs2pc",
-        messageType: "beginner_tutorials/BS2PC",
+        messageType: "IRIS24/BS2PC",
       });
     },
 

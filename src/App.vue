@@ -34,7 +34,7 @@ export default {
       this.listener = new ROSLIB.Topic({
         ros: this.ros,
         name: "/pc2bs",
-        messageType: "beginner_tutorials/PC2BS",
+        messageType: "IRIS24/PC2BS",
       });
     },
     subscribe() {
