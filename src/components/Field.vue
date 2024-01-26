@@ -60,7 +60,7 @@ export default {
           x: 40,
           y: 40,
         },
-        stroke: "red",
+        // stroke: "red",
       },
 
       //config bola
@@ -68,7 +68,7 @@ export default {
         image: null,
         x: 99,
         y: 99,
-        stroke: "red",
+        // stroke: "red",
         width: 25,
         height: 25,
         offset: {
