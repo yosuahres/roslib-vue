@@ -22,6 +22,9 @@ export const useRobotStore = defineStore("alerts", {
       },
       utils: {
         publish_switch: false,
+        visibility_blueball: false,
+        visibility_target: false,
+        tempStatus: 0,
       },
     };
   },

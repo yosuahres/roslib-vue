@@ -3,7 +3,11 @@
     <div class="p-5">
       <p><strong> STATUS : DISCONNECT</strong></p>
       <p>IP LAPTOP: 192.168.1.1</p>
-      <p>Status : {{ ROBOT_STATE.bs2pc.status }}</p>
+      <p class="text-yellow-600">Clicked Status : {{ this.tempStatus }}</p>
+      <p class="text-green-800">
+        Running Status : {{ ROBOT_STATE.bs2pc.status }}
+      </p>
+
       <br />
       <p class="text-green-600"><strong>POSISI</strong></p>
       <div class="px-5">
@@ -87,11 +91,25 @@ export default {
 
       //data yang di publish
       toPC: {},
+
+      //utils
       tempStatus: 0,
+      visibilityBlueBall: false,
+      visibilityTarget: false,
     };
   },
   async beforeMount() {
     await this.init();
+  },
+  mounted() {
+    const THAT = this;
+    const anim = new Konva.Animation(function (frame) {
+      THAT.ROBOT_STATE.utils.tempStatus = THAT.tempStatus;
+      THAT.ROBOT_STATE.utils.visibility_target = THAT.visibilityTarget;
+      THAT.ROBOT_STATE.utils.visibility_blueball = THAT.visibilityBlueBall;
+    });
+
+    anim.start();
   },
   methods: {
     async init() {
@@ -108,12 +126,13 @@ export default {
 
     publish() {
       this.ROBOT_STATE.resetDataRobot();
-      this.ROBOT_STATE.bs2pc.status = this.tempStatus;
+      this.ROBOT_STATE.bs2pc.status = this.ROBOT_STATE.utils.tempStatus;
       switch (this.ROBOT_STATE.bs2pc.status) {
+        case 4:
         case 1:
         case 2:
-          this.ROBOT_STATE.bs2pc.tujuan_x = this.ROBOT_STATE.bs2pc.bola_x;
-          this.ROBOT_STATE.bs2pc.tujuan_y = this.ROBOT_STATE.bs2pc.bola_y;
+          this.ROBOT_STATE.bs2pc.tujuan_x = 0;
+          this.ROBOT_STATE.bs2pc.tujuan_y = 0;
           this.toPC = new ROSLIB.Message({
             status: this.ROBOT_STATE.bs2pc.status,
             tujuan_x: this.ROBOT_STATE.bs2pc.tujuan_x,
@@ -127,14 +146,6 @@ export default {
             tujuan_y: this.ROBOT_STATE.bs2pc.tujuan_y,
           });
           break;
-        case 4:
-          this.ROBOT_STATE.bs2pc.tujuan_x = 600;
-          this.ROBOT_STATE.bs2pc.tujuan_y = 700;
-          this.toPC = new ROSLIB.Message({
-            status: this.ROBOT_STATE.bs2pc.status,
-            tujuan_x: this.ROBOT_STATE.bs2pc.tujuan_x,
-            tujuan_y: this.ROBOT_STATE.bs2pc.tujuan_y,
-          });
       }
 
       this.publisher.publish(this.toPC);
@@ -142,6 +153,20 @@ export default {
 
     statusClick(number) {
       this.tempStatus = number;
+      switch (this.tempStatus) {
+        case 1:
+        case 2:
+        case 4:
+          this.visibilityBlueBall = true;
+          this.visibilityTarget = false;
+          console.log(this.ROBOT_STATE.utils);
+          break;
+        case 3:
+          this.visibilityBlueBall = false;
+          this.visibilityTarget = true;
+          console.log(this.ROBOT_STATE.utils);
+          break;
+      }
     },
   },
 };

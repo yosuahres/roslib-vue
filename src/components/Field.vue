@@ -9,15 +9,21 @@
             image: lapangan,
           }"
         />
+        <v-image :config="target" />
         <v-image :config="robot" />
+        <v-image :config="bola" />
       </v-layer>
     </v-stage>
   </div>
+  {{ this.RobotConfig }}
 </template>
 
 <script>
 import LapanganURL from "@/assets/Lapangan.png";
 import RobotURL from "@/assets/Model_Robot/blue.png";
+import BolaURL from "@/assets/Model_Robot/bola_biru.png";
+import RobotCiumBola from "@/assets/Model_Robot/blue1_ball.png";
+import TargetURL from "@/assets/red_dot-1.png";
 import { useRobotStore } from "../stores/store";
 
 // const flex = document.getElementById("parent");
@@ -41,6 +47,8 @@ export default {
       },
       lapangan: null,
       robot: null,
+      bola: null,
+      target: null,
 
       //init config robot
       RobotConfig: {
@@ -55,6 +63,34 @@ export default {
         },
         stroke: "red",
       },
+
+      //config bola
+      BolaConfig: {
+        image: null,
+        x: 99,
+        y: 99,
+        stroke: "red",
+        width: 25,
+        height: 25,
+        offset: {
+          x: 12.5,
+          y: 12.5,
+        },
+        visible: true,
+      },
+
+      TargetConfig: {
+        image: null,
+        x: 58,
+        y: 58,
+        width: 50,
+        height: 50,
+        offset: {
+          x: 25,
+          y: 25,
+        },
+        visible: false,
+      },
     };
   },
   mounted() {
@@ -65,6 +101,46 @@ export default {
       THAT.RobotConfig.x = THAT.ROBOT_STATE.dataRobot.pos_x;
       THAT.RobotConfig.y = THAT.ROBOT_STATE.dataRobot.pos_y;
       THAT.RobotConfig.rotation = THAT.ROBOT_STATE.dataRobot.pos_theta;
+      THAT.BolaConfig.x = THAT.ROBOT_STATE.dataRobot.bola_x;
+      THAT.BolaConfig.y = THAT.ROBOT_STATE.dataRobot.bola_y;
+
+      //
+      THAT.TargetConfig.visible = THAT.ROBOT_STATE.utils.visibility_target;
+      THAT.BolaConfig.visible = THAT.ROBOT_STATE.utils.visibility_blueball;
+
+      if (THAT.ROBOT_STATE.utils.tempStatus != 3)
+        if (
+          THAT.BolaConfig.x == THAT.RobotConfig.x &&
+          THAT.BolaConfig.y == THAT.RobotConfig.y
+        ) {
+          const Robot = new window.Image();
+          Robot.src = RobotCiumBola;
+          THAT.RobotConfig.image = Robot;
+
+          //deploy robot
+          THAT.robot = THAT.RobotConfig;
+
+          //ngilangin bola
+          THAT.BolaConfig.visible = false;
+        } else {
+          const Robot = new window.Image();
+          Robot.src = RobotURL;
+          THAT.RobotConfig.image = Robot;
+
+          //deploy robot
+          THAT.robot = THAT.RobotConfig;
+
+          //muculin bola
+          THAT.BolaConfig.visible = true;
+        }
+      else {
+        const Robot = new window.Image();
+        Robot.src = RobotURL;
+        THAT.RobotConfig.image = Robot;
+
+        //deploy robot
+        THAT.robot = THAT.RobotConfig;
+      }
     });
 
     anim.start();
@@ -78,14 +154,21 @@ export default {
       // console.log(this.image);
     };
 
-    //robot
-    const that = this;
-    const Robot = new window.Image();
-    Robot.src = RobotURL;
-    this.RobotConfig.image = Robot;
+    //target
+    const Target = new window.Image();
+    Target.src = TargetURL;
+    this.TargetConfig.image = Target;
 
-    //deploy robot
-    this.robot = this.RobotConfig;
+    //deploy Target
+    this.target = this.TargetConfig;
+
+    //bola
+    const Bola = new window.Image();
+    Bola.src = BolaURL;
+    this.BolaConfig.image = Bola;
+
+    //deploy bola
+    this.bola = this.BolaConfig;
   },
   methods: {
     fieldPosition(realPos) {
@@ -118,7 +201,8 @@ export default {
       }
     },
     handleClick(event) {
-      if (this.ROBOT_STATE.bs2pc.status == 3) {
+      if (this.ROBOT_STATE.utils.tempStatus == 3) {
+        console.log(this.ROBOT_STATE.utils);
         const xCoordinate = event.offsetX - 58;
         const yCoordinate = event.offsetY - 58;
         console.log(
@@ -127,6 +211,9 @@ export default {
 
         this.ROBOT_STATE.bs2pc.tujuan_x = xCoordinate;
         this.ROBOT_STATE.bs2pc.tujuan_y = yCoordinate;
+
+        this.TargetConfig.x = this.ROBOT_STATE.bs2pc.tujuan_x + 58;
+        this.TargetConfig.y = this.ROBOT_STATE.bs2pc.tujuan_y + 58;
         // console.log(event);
         // Lakukan sesuatu dengan koordinat yang didapatkan
       }
