@@ -6,3 +6,10 @@ p {
   font-size: 1.5rem /* 18px */;
   line-height: 2.1rem /* 28px */;
 }
+
+.camera-placeholder {
+  background-color: yellow;
+  width: 100%;
+  height: 100%;
+  border: 1px solid black;
+}

@@ -1,80 +1,57 @@
 <template>
-  <div class="basis-1/3">
-    <div class="p-5">
-      <p><strong> STATUS : DISCONNECT</strong></p>
+  <div class="basis-1/3 h-full relative flex flex-col justify-between">
+    <img src="@/assets/Model_Robot/logo.png" alt="Logo" class="absolute top-0 m-4 h-16 z-50" />
+    <br />
+    <br />
+    <div class="p-5 mt-24">
+      <p><strong> STATUS ROS : {{ status }}</strong></p>
       <p>IP LAPTOP: 192.168.1.1</p>
-      <p class="text-yellow-600">Clicked Status : {{ this.tempStatus }}</p>
-      <p class="text-green-800">
-        Running Status : {{ ROBOT_STATE.bs2pc.status }}
-      </p>
 
       <br />
-      <p class="text-green-600"><strong>POSISI</strong></p>
+      <p class="text-green-600"><strong>Detected Object</strong></p>
       <div class="px-5">
-        <p>Posisi X : {{ ROBOT_STATE.dataRobot.pos_x - 58 }}</p>
-        <p>Posisi Y : {{ ROBOT_STATE.dataRobot.pos_y - 58 }}</p>
-        <p>Posisi Theta : {{ ROBOT_STATE.dataRobot.pos_theta * -1 }}</p>
+        <p>Class : </p>
       </div>
-      <br />
-      <p class="text-green-600"><strong>BOLA</strong></p>
-      <div class="px-5">
-        <p>Bola X : {{ ROBOT_STATE.dataRobot.bola_x - 58 }}</p>
-        <p>Bola Y : {{ ROBOT_STATE.dataRobot.bola_y - 58 }}</p>
-      </div>
+
       <br />
       <p class="text-green-600"><strong>KECEPATAN</strong></p>
       <div class="px-5">
-        <p>Kecepatan X : {{ ROBOT_STATE.dataRobot.v_x }}</p>
-        <p>Kecepatan Y : {{ ROBOT_STATE.dataRobot.v_y }}</p>
-        <p>Kecepatan Theta : {{ ROBOT_STATE.dataRobot.v_theta }}</p>
+        <p>Speed: </p>
       </div>
+
       <br />
-      <p class="text-green-600"><strong>POSISI</strong></p>
+      <p class="text-green-600"><strong>POSISI CURRENT</strong></p>
       <div class="px-5">
-        <p>X Tujuan : {{ ROBOT_STATE.bs2pc.tujuan_x }}</p>
-        <p>Y Tujuan : {{ ROBOT_STATE.bs2pc.tujuan_y }}</p>
+        <p>Current Position: </p>
       </div>
-    </div>
-    <div class="flex flex-wrap">
-      <button
-        class="flex-1 m-2 p-4 bg-white border border-blue-500 text-blue-500 font-semibold py-2 px-4 rounded transition duration-300 ease-in-out hover:bg-blue-500 hover:text-white"
-        @click="statusClick(1)"
-      >
-        Status 1
-      </button>
-      <button
-        class="flex-1 m-2 p-4 bg-white border border-blue-500 text-blue-500 font-semibold py-2 px-4 rounded transition duration-300 ease-in-out hover:bg-blue-500 hover:text-white"
-        @click="statusClick(2)"
-      >
-        Status 2
-      </button>
-      <button
-        class="flex-1 m-2 p-4 bg-white border border-blue-500 text-blue-500 font-semibold py-2 px-4 rounded transition duration-300 ease-in-out hover:bg-blue-500 hover:text-white"
-        @click="statusClick(3)"
-      >
-        Status 3
-      </button>
-      <button
-        class="flex-1 m-2 p-4 bg-white border border-yellow-500 text-yellow-500 font-semibold py-2 px-4 rounded transition duration-300 ease-in-out hover:bg-yellow-500 hover:text-white"
-        @click="statusClick(4)"
-      >
-        Status 4
-      </button>
-    </div>
-    <div class="flex flex-col md:flex-row">
-      <div
-        class="flex-1 m-2 p-4 text-center bg-white border border-green-500 text-green-500 font-semibold py-2 px-4 rounded transition duration-300 ease-in-out hover:bg-green-500 hover:text-white"
-        @click="publish"
-      >
-        PUBLISH!
+      
+      <br />
+      <p class="text-blue-600"><strong>POSISI TARGET</strong></p>
+      <div class="px-5">
+        <p>Target Position: </p>
       </div>
-    </div>
+
+      <p class="text-green-600"><strong>Button</strong></p>
+      <div class="px-5 flex flex-col space-y-4">
+        <div class="flex space-x-4">
+          <button @click="statusClick(1)" :class="{'border-green-500': activeButton === 1, 'border-blue-500': activeButton !== 1}" class="text-black px-4 py-2 rounded w-1/4 border-2 bg-transparent">Button 1</button>
+          <button @click="statusClick(2)" :class="{'border-green-500': activeButton === 2, 'border-blue-500': activeButton !== 2}" class="text-black px-4 py-2 rounded w-1/4 border-2 bg-transparent">Button 2</button>
+          <button @click="statusClick(3)" :class="{'border-green-500': activeButton === 3, 'border-blue-500': activeButton !== 3}" class="text-black px-4 py-2 rounded w-1/4 border-2 bg-transparent">Button 3</button>
+          <button @click="statusClick(4)" :class="{'border-green-500': activeButton === 4, 'border-blue-500': activeButton !== 4}" class="text-black px-4 py-2 rounded w-1/4 border-2 bg-transparent">Button 4</button>
+        </div>
+        <div class="flex">
+          <button @click="statusClick(0)" :class="{'border-green-500': activeButton === 0, 'border-blue-500': activeButton !== 0}" class="text-black px-4 py-2 rounded w-full border-2 bg-transparent">Default Button</button>
+        </div>
+      </div>
+      <p class="text-red-500"><strong>Button Status: {{ buttonStatus }}</strong></p>
+    </div>  
   </div>
 </template>
 
 <script>
 import ROSLIB from "roslib";
 import { useRobotStore } from "../stores/store";
+import LogoURL from "@/assets/Model_Robot/logo.png"
 
 export default {
   setup() {
@@ -94,22 +71,13 @@ export default {
 
       //utils
       tempStatus: 0,
-      visibilityBlueBall: false,
-      visibilityTarget: false,
+      status: 'DISCONNECT',
+      buttonStatus: 'Idle',
+      activeButton: null,
     };
   },
   async beforeMount() {
     await this.init();
-  },
-  mounted() {
-    const THAT = this;
-    const anim = new Konva.Animation(function (frame) {
-      THAT.ROBOT_STATE.utils.tempStatus = THAT.tempStatus;
-      THAT.ROBOT_STATE.utils.visibility_target = THAT.visibilityTarget;
-      THAT.ROBOT_STATE.utils.visibility_blueball = THAT.visibilityBlueBall;
-    });
-
-    anim.start();
   },
   methods: {
     async init() {
@@ -124,49 +92,10 @@ export default {
       });
     },
 
-    publish() {
-      this.ROBOT_STATE.bs2pc.status = this.ROBOT_STATE.utils.tempStatus;
-      switch (this.ROBOT_STATE.bs2pc.status) {
-        case 4:
-        case 1:
-        case 2:
-          this.ROBOT_STATE.resetDataRobot();
-          this.ROBOT_STATE.bs2pc.tujuan_x = 0;
-          this.ROBOT_STATE.bs2pc.tujuan_y = 0;
-          this.toPC = new ROSLIB.Message({
-            status: this.ROBOT_STATE.bs2pc.status,
-            tujuan_x: this.ROBOT_STATE.bs2pc.tujuan_x,
-            tujuan_y: this.ROBOT_STATE.bs2pc.tujuan_y,
-          });
-          break;
-        case 3:
-          this.toPC = new ROSLIB.Message({
-            status: this.ROBOT_STATE.bs2pc.status,
-            tujuan_x: this.ROBOT_STATE.bs2pc.tujuan_x,
-            tujuan_y: this.ROBOT_STATE.bs2pc.tujuan_y,
-          });
-          break;
-      }
-
-      this.publisher.publish(this.toPC);
-    },
-
     statusClick(number) {
       this.tempStatus = number;
-      switch (this.tempStatus) {
-        case 1:
-        case 2:
-        case 4:
-          this.visibilityBlueBall = true;
-          this.visibilityTarget = false;
-          console.log(this.ROBOT_STATE.utils);
-          break;
-        case 3:
-          this.visibilityBlueBall = false;
-          this.visibilityTarget = true;
-          console.log(this.ROBOT_STATE.utils);
-          break;
-      }
+      this.buttonStatus = number === 0 ? 'Idle' : `Button ${number} clicked`;
+      this.activeButton = number;
     },
   },
 };
