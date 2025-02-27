@@ -30,24 +30,8 @@ export default {
       this.ros = new ROSLIB.Ros({
         url: "ws://localhost:9090", // Sesuaikan URL dengan alamat ROS Bridge Anda
       });
-
-      this.listener = new ROSLIB.Topic({
-        ros: this.ros,
-        name: "/pc2bs",
-        messageType: "IRIS24/PC2BS",
-      });
     },
     subscribe() {
-      let that = this;
-      that.listener.subscribe(function (message) {
-        that.ROBOT_STATE.dataRobot = message;
-        that.ROBOT_STATE.dataRobot.pos_x += 58;
-        that.ROBOT_STATE.dataRobot.pos_y += 58;
-        that.ROBOT_STATE.dataRobot.bola_x += 58;
-        that.ROBOT_STATE.dataRobot.bola_y += 58;
-        that.ROBOT_STATE.dataRobot.pos_theta *= -1;
-        console.log(that.ROBOT_STATE.dataRobot);
-      });
     },
     publish() {
       this.publisher.publish(this.toPC);

@@ -1,11 +1,9 @@
 <script setup>
-import dataRobot from "../components/dataRobot.vue";
 import cameraInput from "../components/cameraInput.vue";
 </script>
 
 <template>
-  <div class="flex flex-col md:flex-row m-2">
+  <div class="w-full h-screen p-4">
     <cameraInput></cameraInput>
-    <dataRobot></dataRobot>
   </div>
 </template>
